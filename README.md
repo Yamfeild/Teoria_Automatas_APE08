@@ -279,7 +279,7 @@ Crear las siguientes peticiones (header requerido: `Content-Type: application/js
 
 ---
 
-## Nota para el equipo de frontend
+## Nota para el frontend
 
 - **CORS** habilitado para todos los orígenes mediante `flask-cors`.
 - El `arbol_derivacion` llega como JSON anidado con campos `simbolo` y `hijos[]`, listo para renderizar con **D3.js**, **vis.js**, o cualquier librería de árboles.
