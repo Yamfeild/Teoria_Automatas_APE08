@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analizador de Expresiones Booleanas</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <div>
+                <p class="eyebrow">Analizador CFG</p>
+                <h1>Expresiones Booleanas</h1>
+            </div>
+            <div class="header-right">
+                <div class="status-chip" id="server-status">
+                    <span class="status-indicator"></span>
+                    <span id="status-text">Conectando...</span>
+                </div>
+                <div class="api-info-toggle" id="api-toggle" title="Mostrar información de endpoints">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </div>
+            </div>
+        </header>
+        
+        <div class="api-info-panel hidden" id="api-info-panel">
+            <h3>Endpoints API</h3>
+            <div class="endpoint-list">
+                <div class="endpoint-item">
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/salud</span>
+                    <span class="endpoint-desc">Estado del servidor</span>
+                </div>
+                <div class="endpoint-item">
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/gramatica</span>
+                    <span class="endpoint-desc">Definición gramatical</span>
+                </div>
+                <div class="endpoint-item">
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/validar</span>
+                    <span class="endpoint-desc">Valida sintaxis</span>
+                </div>
+                <div class="endpoint-item">
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/derivar</span>
+                    <span class="endpoint-desc">Valida + árbol + ambigüedad</span>
+                </div>
+            </div>
+        </div>
+
+        <main class="content-grid">
+            <aside class="panel panel-left">
+                <section class="card grammar-card">
+                    <div class="card-heading">
+                        <h2>Gramática formal</h2>
+                        <span class="badge">G = (V, Σ, P, S)</span>
+                    </div>
+                    <pre class="grammar-display" id="grammar-definition">Cargando gramática...</pre>
+                </section>
+
+                <section class="card control-card">
+                    <h2>Entrada</h2>
+                    <label for="expression-input">Expresión booleana</label>
+                    <input id="expression-input" type="text" placeholder="A | ~(B & C)" autocomplete="off" />
+
+                        <div class="button-row">
+                        <button id="validate-btn" class="primary-btn" title="POST /api/analizar">
+                            <span class="btn-label">Validar Sintaxis</span>
+                            <span class="btn-endpoint"></span>
+                        </button>
+                        
+                        <button id="derive-btn" class="secondary-btn" title="POST /api/derivar">
+                            <span class="btn-label">Generar Árbol</span>
+                            <span class="btn-endpoint"></span>
+                        </button>
+                    </div>
+
+                    <div class="endpoint-legend">
+                        <small>Hint: Usa "Validar Sintaxis" para revisar solo la gramática.</small>
+                        <small>Usa "Generar Árbol" para la derivación completa.</small>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="panel panel-right">
+                <section class="card result-card">
+                    <div class="result-header">
+                        <h2>Resultado</h2>
+                        <span id="result-summary" class="result-tag">Esperando acción</span>
+                    </div>
+                    <p id="result-message" class="result-message">Utiliza los botones para validar o generar el árbol.</p>
+                </section>
+
+                <section class="card warning-card hidden" id="ambiguity-banner">
+                    <h3>Gramática Ambigua</h3>
+                    <p id="ambiguity-reasons"></p>
+                </section>
+
+                <section class="card tree-card">
+                    <div class="card-heading">
+                        <h2>Árbol de Derivación</h2>
+                    </div>
+                    <div class="tree-canvas" id="tree-canvas">
+                        <p class="tree-empty">El árbol aparecerá aquí luego de generar la derivación.</p>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

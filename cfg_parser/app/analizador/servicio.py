@@ -151,4 +151,18 @@ def analizar_expresion(
 
 def obtener_definicion_gramatica() -> dict:
     """Retorna la definición formal de la gramática como diccionario."""
-    return DEFINICION_GRAMATICA
+    
+    # Creamos un nuevo diccionario de producciones adaptado para el Frontend
+    producciones_texto = {}
+    for no_terminal, reglas in DEFINICION_GRAMATICA["producciones"].items():
+        # Une cada lista de tokens en un solo texto. 
+        # Ej: ["Exp", "|", "Term"] se convierte en "Exp | Term"
+        producciones_texto[no_terminal] = [" ".join(regla) for regla in reglas]
+
+    # Retornamos la estructura exacta que espera leer el JavaScript
+    return {
+        "no_terminales": DEFINICION_GRAMATICA["no_terminales"],
+        "terminales": DEFINICION_GRAMATICA["terminales"],
+        "simbolo_inicial": DEFINICION_GRAMATICA["simbolo_inicial"],
+        "producciones": producciones_texto
+    }
