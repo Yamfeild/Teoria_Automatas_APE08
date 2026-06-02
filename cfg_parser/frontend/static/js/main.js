@@ -41,6 +41,7 @@ function updateServerStatus(isActive) {
 function renderGrammar(data) {
     const nonTerminals = data.no_terminales || [];
     const productions = data.producciones || {};
+    const terminals = data.terminales || []; 
     const startSymbol = nonTerminals.length ? nonTerminals[0] : "S";
 
     const productionEntries = Object.entries(productions).map(([lhs, rhs]) => {
@@ -48,18 +49,8 @@ function renderGrammar(data) {
         return `${lhs} → ${rules.join(" | ")}`;
     });
 
-    const terminals = new Set();
-    Object.values(productions).flatMap(value => Array.isArray(value) ? value : [value])
-        .forEach(rule => {
-            const matches = rule.match(/\w+|\|\(|\)|~|&/g) || [];
-            matches.forEach(token => {
-                if (!nonTerminals.includes(token) && token !== "|" && token !== "(" && token !== ")" && token !== "~" && token !== "&") {
-                    terminals.add(token);
-                }
-            });
-        });
-
-    const sigma = terminals.size ? Array.from(terminals).join(", ") : "No disponible";
+    const sigma = terminals.length ? terminals.join(", ") : "No disponible";
+    
     grammarDefinition.textContent = `V = { ${nonTerminals.join(", ")} }\nΣ = { ${sigma} }\nP = {\n  ${productionEntries.join("\n  ")}\n}\nS = ${startSymbol}`;
 }
 
@@ -70,19 +61,19 @@ function showResult({ success, message, errorText = null }) {
     resultMessage.classList.remove("success", "error");
     resultSummary.classList.remove("success", "error");
 
-    const endpointLabel = lastEndpointUsed ? `<span style="opacity:0.6; font-size:0.85em; margin-left: 8px;">(${lastEndpointUsed})</span>` : "";
+    // 👇 Eliminamos por completo la variable endpointLabel
 
     if (success) {
         resultSummary.textContent = "Sintaxis válida";
         resultSummary.classList.add("success");
-        // Mensaje limpio y elegante sin JSON
-        resultMessage.innerHTML = `<strong>¡Todo correcto!</strong> ${message} ${endpointLabel}`;
+        // 👇 Imprimimos solo el mensaje limpio
+        resultMessage.innerHTML = `<strong>¡Todo correcto!</strong> ${message}`;
         resultMessage.classList.add("success");
     } else {
         resultSummary.textContent = "Error sintáctico";
         resultSummary.classList.add("error");
-        // Imprime exactamente la posición del error que envía el backend
-        resultMessage.innerHTML = `<strong>Se encontró un problema:</strong> ${errorText || message} ${endpointLabel}`;
+        // 👇 Imprimimos solo el error limpio
+        resultMessage.innerHTML = `<strong>Se encontró un problema:</strong> ${errorText || message}`;
         resultMessage.classList.add("error");
     }
 }
